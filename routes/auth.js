@@ -1,5 +1,6 @@
 const router = require("express").Router()
 const { check, validationResult } = require("express-validator")
+const { users } = require("../db")
 
 router.post("/signup",[
   check("email","Please provide a valid email")
@@ -10,7 +11,7 @@ router.post("/signup",[
   })
 ], (req,res) => {
   const { password, email} = req.body
-
+  // VALIDATE EMAIL
   const errors = validationResult(req)
 
   if(!errors.isEmpty()) {
@@ -18,8 +19,23 @@ router.post("/signup",[
       errors: errors.array()
     })
   }
+
+  // VALIDATE IF EMAIL ALREADY EXISTS
+  let user = users.find((user) => {
+    return user.email === email
+  })
+  
+  if(user){
+    res.status(400).json({
+      "errors": [
+        {
+          "msg": "Email already exists"
+        }
+      ]
+    })
+  }
   console.log(password,email)
-  res.send("Auth route working")
+  res.send("Validation Past")
 })
 
 
