@@ -1,6 +1,7 @@
 const router = require("express").Router()
 const { check, validationResult } = require("express-validator")
 const { users } = require("../db")
+const bcrypt = reqire("bcrypt")
 
 router.post("/signup",[
   check("email","Please provide a valid email")
